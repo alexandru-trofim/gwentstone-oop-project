@@ -5,12 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
 
-public class EmpressThorina extends HeroCard implements Card{
-    private @Getter @Setter int mana;
-    private @Getter @Setter int health;
-    private @Getter @Setter String description;
-    private @Getter @Setter ArrayList<String> colors;
-    private @Getter @Setter String name;
+public class EmpressThorina extends HeroCard {
 
     public EmpressThorina(CardInput cardInput) {
         super(cardInput);

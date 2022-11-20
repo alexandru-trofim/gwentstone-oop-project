@@ -6,13 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-public class LordRoyce extends HeroCard implements Card{
-
-    private @Getter @Setter int mana;
-    private @Getter @Setter int health;
-    private @Getter @Setter String description;
-    private @Getter @Setter ArrayList<String> colors;
-    private @Getter @Setter String name;
+public class LordRoyce extends HeroCard {
 
     public LordRoyce(CardInput cardInput) {
         super(cardInput);

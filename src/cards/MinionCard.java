@@ -2,69 +2,43 @@ package cards;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
 public class MinionCard extends Card {
 
-    private @Getter @Setter int mana;
-    private @Getter @Setter int health;
-    private @Getter @Setter int attackDamage;
-    private @Getter @Setter String description;
-    private @Getter @Setter ArrayList<String> colors;
-    private @Getter @Setter String name;
-    private @Getter @Setter boolean isTank;
-    private @Getter @Setter boolean isFrozen;
-
-    public MinionCard(int mana, int health, int attackDamage, String description, ArrayList<String> colors, String name) {
-        this.mana = mana;
-        this.health = health;
-        this.attackDamage = attackDamage;
-        this.description = description;
-        this.colors = colors;
-        this.name = name;
-        this.isFrozen = false;
-        if (this.name.equals("Goliath") || this.name.equals("Warden")) {
-            this.isTank = true;
-        } else {
-            this.isTank = false;
-        }
-    }
-
-    public MinionCard(MinionCard cardToCopy) {
-        this.mana = cardToCopy.mana;
-        this.health = cardToCopy.health;
-        this.attackDamage = cardToCopy.attackDamage;
-        this.description = cardToCopy.description;
-        this.colors = cardToCopy.colors;
-        this.name = cardToCopy.name;
-        this.isTank = cardToCopy.isTank;
-        this.isFrozen = cardToCopy.isFrozen;
-    }
-
     public  MinionCard() {
 
     }
 
     public MinionCard(CardInput cardInput) {
-        this.mana = cardInput.getMana();
-        this.attackDamage = cardInput.getAttackDamage();
-        this.health = cardInput.getHealth();
-        this.description = cardInput.getDescription();
-        this.name = cardInput.getName();
+        this.setMana(cardInput.getMana());
+        this.setHealth(cardInput.getHealth());
+        this.setAttackDamage(cardInput.getAttackDamage());
+        this.setDescription(cardInput.getDescription());
+        this.setColors(cardInput.getColors());
+        this.setName(cardInput.getName());
+        this.setFrozen(false);
 
-        this.colors = new ArrayList<String>();
-        for(String color: cardInput.getColors()) {
-            this.colors.add(color);
-        }
-
-        this.isFrozen = false;
-        if (this.name == "Goliath" || this.name == "Warden") {
-            this.isTank = true;
+        if (this.getName().equals("Goliath")  || this.getName().equals("Warden")) {
+            this.setTank(true);
         } else {
-            this.isTank = false;
+            this.setTank(false);
         }
+    }
+
+    public MinionCard(Card cardToCopy) {
+        this.setMana(cardToCopy.getMana());
+        this.setHealth(cardToCopy.getHealth());
+        this.setAttackDamage(cardToCopy.getAttackDamage());
+        this.setDescription(cardToCopy.getDescription());
+        this.setColors(cardToCopy.getColors());
+        this.setName(cardToCopy.getName());
+        this.setTank(cardToCopy.isTank());
+        this.setFrozen(cardToCopy.isFrozen());
     }
 
     @Override
@@ -76,4 +50,6 @@ public class MinionCard extends Card {
     public void specialAttack() {
 
     }
+
+
 }

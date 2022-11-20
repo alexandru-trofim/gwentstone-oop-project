@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
 
-public class HeartHound extends EnvironmentCard implements Card{
+public class HeartHound extends EnvironmentCard {
     private @Getter @Setter int mana;
     private @Getter @Setter String description;
     private @Getter @Setter ArrayList<String> colors;
@@ -15,7 +15,7 @@ public class HeartHound extends EnvironmentCard implements Card{
         super(cardInput);
     }
 
-    public HeartHound(HeartHound cardToCopy) {
+    public HeartHound(Card cardToCopy) {
         super(cardToCopy);
     }
     @Override

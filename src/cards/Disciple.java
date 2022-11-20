@@ -6,24 +6,14 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-public class Disciple extends SpecialMinionCard implements Card{
-    private @Getter @Setter int mana;
-    private @Getter @Setter int attackDamage;
-    private @Getter @Setter String description;
-    private @Getter @Setter ArrayList<String> colors;
-    private @Getter @Setter String name;
-    private @Getter @Setter boolean isTank;
-    private @Getter @Setter boolean isFrozen;
+public class Disciple extends SpecialMinionCard {
 
-    public Disciple(int mana, int health, int attackDamage, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamage, description, colors, name);
-    }
 
     public Disciple(CardInput cardInput) {
         super(cardInput);
     }
 
-    public Disciple(Disciple cardToCopy) {
+    public Disciple(Card cardToCopy) {
         super(cardToCopy);
     }
 

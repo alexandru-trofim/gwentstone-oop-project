@@ -1,29 +1,22 @@
 package cards;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
-public class HeroCard implements Card{
-    private @Getter @Setter int mana;
-    private @Getter @Setter int health;
-    private @Getter @Setter String description;
-    private @Getter @Setter ArrayList<String> colors;
-    private @Getter @Setter String name;
+public class HeroCard extends Card{
 
     public HeroCard(CardInput cardInput) {
-        this.mana = cardInput.getMana();
-        this.description = cardInput.getDescription();
-        this.name = cardInput.getName();
-
-        this.colors = new ArrayList<String>();
-        for(String color: cardInput.getColors()) {
-            this.colors.add(color);
-        }
-
-        this.health = 30;
+        this.setMana(cardInput.getMana());
+        this.setDescription(cardInput.getDescription());
+        this.setColors(cardInput.getColors());
+        this.setName(cardInput.getName());
+        this.setFrozen(false);
+        this.setHealth(30);
     }
 
 
@@ -36,4 +29,16 @@ public class HeroCard implements Card{
     public void specialAttack() {
 
     }
+
+    public void convertCardToJson(ObjectNode cardOutput) {
+        cardOutput.put("mana", this.getMana());
+        cardOutput.put("description", this.getDescription());
+        ArrayNode colorsOutput = cardOutput.putArray("colors");
+        for(String color: this.getColors()) {
+            colorsOutput.add(color);
+        }
+        cardOutput.put("name", this.getName());
+        cardOutput.put("health", this.getHealth());
+    }
+
 }

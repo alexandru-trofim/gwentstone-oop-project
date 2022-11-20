@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-public class Winterfell extends EnvironmentCard implements Card{
+public class Winterfell extends EnvironmentCard {
     private @Getter @Setter int mana;
     private @Getter @Setter String description;
     private @Getter @Setter ArrayList<String> colors;
@@ -17,7 +17,7 @@ public class Winterfell extends EnvironmentCard implements Card{
     }
 
 
-    public Winterfell(Winterfell cardToCopy) {
+    public Winterfell(Card cardToCopy) {
         super(cardToCopy);
     }
     @Override

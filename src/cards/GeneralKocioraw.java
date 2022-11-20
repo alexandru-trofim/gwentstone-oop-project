@@ -6,12 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-public class GeneralKocioraw extends HeroCard implements Card{
-    private @Getter
-    @Setter int mana;
-    private @Getter @Setter String description;
-    private @Getter @Setter ArrayList<String> colors;
-    private @Getter @Setter String name;
+public class GeneralKocioraw extends HeroCard {
 
     public GeneralKocioraw(CardInput cardInput) {
         super(cardInput);

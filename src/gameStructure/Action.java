@@ -1,4 +1,4 @@
-package players;
+package gameStructure;
 
 import fileio.ActionsInput;
 import fileio.Coordinates;
@@ -18,10 +18,10 @@ public class Action {
     public Action(ActionsInput actionsInput) {
         this.command = actionsInput.getCommand();
         this.handId = actionsInput.getHandIdx();
-        this.cardAttacker.setX(actionsInput.getCardAttacker().getX());
-        this.cardAttacker.setY(actionsInput.getCardAttacker().getY());
-        this.cardAttacked.setX(actionsInput.getCardAttacked().getX());
-        this.cardAttacked.setY(actionsInput.getCardAttacked().getY());
+        //this.cardAttacker.setX(actionsInput.getCardAttacker().getX());
+        //this.cardAttacker.setY(actionsInput.getCardAttacker().getY());
+        //this.cardAttacked.setX(actionsInput.getCardAttacked().getX());
+        //this.cardAttacked.setY(actionsInput.getCardAttacked().getY());
         this.affectedRow = actionsInput.getAffectedRow();
         this.playerIdx = actionsInput.getPlayerIdx();
         this.x = actionsInput.getX();

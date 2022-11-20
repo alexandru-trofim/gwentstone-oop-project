@@ -1,5 +1,6 @@
-package players;
+package gameStructure;
 
+import cards.Card;
 import fileio.DecksInput;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,8 @@ public class Player {
     private @Getter @Setter ArrayList<Deck> decks;
     private @Getter @Setter int mana;
     private @Getter @Setter Deck ActiveDeck;
+    private @Getter @Setter Card playerHero;
+    private @Getter @Setter ArrayList<Card> playerHand;
 
     public Player(DecksInput decksInput) {
         this.nrCardsInDeck = decksInput.getNrCardsInDeck();
@@ -26,7 +29,24 @@ public class Player {
         }
     }
 
+    public void initializeActiveDeck(int deckId) {
+        this.ActiveDeck =  new Deck(this.decks.get(deckId));
+    }
 
+    public void getCardFromDeck() {
+        if (getActiveDeck().getCards().size() > 0) {
+            //add first card from activeDeck
+            playerHand.add(getActiveDeck().getCards().get(0));
+            //remove it from deck
+            getActiveDeck().getCards().remove(0);
+            //decrement the number of card in deck
+            getActiveDeck().setNrCardsInDeck(getActiveDeck().getNrCardsInDeck() - 1);
+        }
+    }
+
+    public void getNewHand() {
+        this.playerHand = new ArrayList<>();
+    }
 
 
 }

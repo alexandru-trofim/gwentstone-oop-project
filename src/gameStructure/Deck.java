@@ -1,8 +1,7 @@
-package players;
+package gameStructure;
 
 import cards.*;
 import fileio.CardInput;
-import fileio.DecksInput;
 import lombok.Setter;
 import lombok.Getter;
 
@@ -25,7 +24,7 @@ public class Deck {
         };
     }
 
-    public Card copyCard(MinionCard card) {
+    public Card copyCard(Card card) {
         return switch (card.getName()) {
             case "The Ripper" -> new TheRipper(card);
             case "Miraj" -> new Miraj(card);
@@ -56,7 +55,8 @@ public class Deck {
         this.cards = new ArrayList<Card>();
 
         for(Card cardToAdd: deckToCopy.getCards()) {
-            Card newCard =
+            Card newCard = copyCard(cardToAdd);
+            this.cards.add(newCard);
         }
     }
 

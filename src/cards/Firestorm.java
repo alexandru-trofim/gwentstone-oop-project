@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-public class Firestorm extends EnvironmentCard implements Card{
+public class Firestorm extends EnvironmentCard {
 
     private @Getter @Setter int mana;
     private @Getter @Setter String description;
@@ -17,7 +17,7 @@ public class Firestorm extends EnvironmentCard implements Card{
         super(cardInput);
     }
 
-    public Firestorm(Firestorm cardToCopy) {
+    public Firestorm(Card cardToCopy) {
         super(cardToCopy);
     }
 
