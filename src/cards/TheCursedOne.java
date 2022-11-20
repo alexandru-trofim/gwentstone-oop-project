@@ -1,5 +1,6 @@
 package cards;
 
+import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,13 @@ public class TheCursedOne extends SpecialMinionCard implements Card{
         super(mana, health, attackDamage, description, colors, name);
     }
 
+    public TheCursedOne(CardInput cardInput) {
+        super(cardInput);
+    }
+
+    public TheCursedOne(TheCursedOne cardToCopy) {
+        super(cardToCopy);
+    }
     @Override
     public void attack() {
 

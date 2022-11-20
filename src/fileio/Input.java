@@ -3,9 +3,9 @@ package fileio;
 import java.util.ArrayList;
 
 public final class Input {
-    private DecksInput playerOneDecks;
-    private DecksInput playerTwoDecks;
-    private ArrayList<GameInput> games;
+    private DecksInput playerOneDecks; //implemented
+    private DecksInput playerTwoDecks; //impplemented
+    private ArrayList<GameInput> games; // implemented
 
     public Input() {
     }

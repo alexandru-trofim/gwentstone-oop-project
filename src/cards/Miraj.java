@@ -1,5 +1,6 @@
 package cards;
 
+import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,13 @@ public class Miraj extends SpecialMinionCard implements Card{
 
     public Miraj(int mana, int health, int attackDamage, String description, ArrayList<String> colors, String name) {
         super(mana, health, attackDamage, description, colors, name);
+    }
+
+    public Miraj(CardInput cardInput) {
+        super(cardInput);
+    }
+    public Miraj(Miraj cardToCopy) {
+        super(cardToCopy);
     }
 
     @Override

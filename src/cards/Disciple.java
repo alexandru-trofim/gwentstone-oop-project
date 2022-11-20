@@ -1,5 +1,6 @@
 package cards;
 
+import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,14 @@ public class Disciple extends SpecialMinionCard implements Card{
 
     public Disciple(int mana, int health, int attackDamage, String description, ArrayList<String> colors, String name) {
         super(mana, health, attackDamage, description, colors, name);
+    }
+
+    public Disciple(CardInput cardInput) {
+        super(cardInput);
+    }
+
+    public Disciple(Disciple cardToCopy) {
+        super(cardToCopy);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cards;
 
+import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,12 @@ public class TheRipper extends SpecialMinionCard implements Card{
     public TheRipper(int mana, int health, int attackDamage, String description, ArrayList<String> colors, String name) {
         super(mana, health, attackDamage, description, colors, name);
     }
-
+    public TheRipper(CardInput cardInput) {
+        super(cardInput);
+    }
+    public TheRipper(TheRipper cardToCopy) {
+        super(cardToCopy);
+    }
     @Override
     public void attack() {
 
