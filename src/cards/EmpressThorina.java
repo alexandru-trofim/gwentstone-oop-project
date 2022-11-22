@@ -11,13 +11,5 @@ public class EmpressThorina extends HeroCard {
         super(cardInput);
     }
 
-    @Override
-    public void attack() {
 
-    }
-
-    @Override
-    public void specialAttack() {
-
-    }
 }

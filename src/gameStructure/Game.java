@@ -1,6 +1,7 @@
 package gameStructure;
 
 import cards.Card;
+import cards.EnvironmentCard;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import debug.Debug;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class Game {
 
     private @Getter @Setter Card[][]  gameTable;
     private @Getter @Setter int playerToMove;
+    private @Getter @Setter int currentRound;
 
     public Game(Player playerOne, Player playerTwo, ArrayList<GameSession> games) {
         this.playerOne = playerOne;
@@ -26,6 +28,65 @@ public class Game {
 
 
     //aici implementez functiile legate de executarea actiunilor;
+    public void resetCardMadeMove() {
+        int numberOfRows = 4;
+        int numberOfColumns = 5;
+
+        for (int i = 0; i < numberOfRows; ++i) {
+            for (int j = 0; j < numberOfRows; ++j) {
+                if (gameTable[i][j] != null) {
+                    gameTable[i][j].setMadeMove(false);
+                }
+            }
+        }
+    }
+    public void endPlayerTurn() {
+        //if the current player ended his turn and so did the other player
+        //then we end the round
+        if((playerToMove == 1 && playerTwo.getMadeMove() == 1) ||
+                (playerToMove == 2 && playerOne.getMadeMove() == 1)) {
+            //end round
+            playerOne.makeCardsUnfrozen();
+            playerTwo.makeCardsUnfrozen();
+
+            playerOne.getCardFromDeck();
+            playerTwo.getCardFromDeck();
+
+            playerOne.setMadeMove(0);
+            playerTwo.setMadeMove(0);
+
+            //set All cards property Made move to false
+            resetCardMadeMove();
+
+            currentRound += 1;
+            if (currentRound <= 10) {
+                playerOne.setMana(playerOne.getMana() + currentRound);
+                playerTwo.setMana(playerTwo.getMana() + currentRound);
+
+            } else {
+                playerOne.setMana(playerOne.getMana() + 10);
+                playerTwo.setMana(playerTwo.getMana() + 10);
+            }
+
+            if (playerToMove == 1)
+                playerToMove = 2;
+            else
+                playerToMove = 1;
+
+        } else {
+            if (playerToMove == 1) {
+                playerOne.setMadeMove(1);
+                playerToMove = 2;
+            } else {
+                playerTwo.setMadeMove(1);
+                playerToMove = 1;
+            }
+        }
+
+    }
+
+
+
     public void loadCurrentSession(GameSession session) {
         GameStart gameStart = session.getGameStart();
         //initialize new hands for each hand
@@ -49,12 +110,20 @@ public class Game {
         //prepare the game table
         this.gameTable = new Card[4][5];
 
-        //set Player to move
+        //set Player to movetest05_use_environment_card_invalid.jsonf
         this.playerToMove = gameStart.getStartingPlayer();
 
         //get one card from deck for each player
         this.playerOne.getCardFromDeck();
         this.playerTwo.getCardFromDeck();
+
+
+        //set mana for players
+        this.playerOne.setMana(1);
+        this.playerTwo.setMana(1);
+
+        //set current round
+        this.currentRound = 1;
 
     }
 
@@ -62,6 +131,7 @@ public class Game {
         ArrayList<Action> actions = session.getActions();
 
         for(Action currentAction: actions) {
+            System.out.printf(currentAction.getCommand() + "\n");
             //check which action we have and execute it
             switch (currentAction.getCommand()) {
                 case "getPlayerDeck":
@@ -78,6 +148,66 @@ public class Game {
                     break;
                 case "getPlayerTurn":
                     Debug.getPlayerTurn(playerToMove, output);
+                    break;
+                case "getPlayerMana":
+                    if (currentAction.getPlayerIdx() == 1)
+                        Debug.getPlayerMana(playerOne.getMana(), output, 1);
+                    else
+                        Debug.getPlayerMana(playerTwo.getMana(), output, 2);
+                    break;
+                case "getCardsOnTable":
+                    Debug.getCardsOnTable(gameTable,output);
+                    break;
+                case "endPlayerTurn":
+                    endPlayerTurn();
+                    break;
+                case "placeCard":
+                    if (playerToMove == 1)
+                        currentAction.placeCard(gameTable, playerOne,
+                            playerToMove, currentAction.getHandId(), output);
+                    else
+                        currentAction.placeCard(gameTable, playerTwo,
+                                playerToMove, currentAction.getHandId(), output);
+                    break;
+                case "getCardsInHand":
+                    if(currentAction.getPlayerIdx() == 1)
+                        Debug.getCardsInHand(playerOne.getPlayerHand(), output, 1);
+                    else
+                        Debug.getCardsInHand(playerTwo.getPlayerHand(), output, 2);
+                    break;
+                case "getEnvironmentCardsInHand":
+                    if(currentAction.getPlayerIdx() == 1)
+                        Debug.getEnvironmentCardsInHand(playerOne.getPlayerHand(), output, 1);
+                    else
+                        Debug.getEnvironmentCardsInHand(playerTwo.getPlayerHand(), output, 2);
+                    break;
+                case "getCardAtPosition":
+                    Debug.getCardAtPosition(currentAction.getX(), currentAction.getY(),
+                            gameTable, output);
+                    break;
+                case "useEnvironmentCard":
+                    if (playerToMove == 1) {
+                        currentAction.useEnvironmentCard(currentAction.getHandId(),
+                                currentAction.getAffectedRow(),
+                                1,
+                                gameTable,
+                                playerOne,
+                                output);
+                    } else {
+                        currentAction.useEnvironmentCard(currentAction.getHandId(),
+                                currentAction.getAffectedRow(),
+                                2,
+                                gameTable,
+                                playerTwo,
+                                output);
+                    }
+                    break;
+                case "getFrozenCardsOnTable":
+                    Debug.getFrozenCardsOnTable(gameTable, output);
+                    break;
+
+
+
             }
         }
     }

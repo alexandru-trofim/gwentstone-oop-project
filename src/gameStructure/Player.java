@@ -15,13 +15,14 @@ public class Player {
     private @Getter @Setter Deck ActiveDeck;
     private @Getter @Setter Card playerHero;
     private @Getter @Setter ArrayList<Card> playerHand;
+    private @Getter @Setter int madeMove;
 
     public Player(DecksInput decksInput) {
         this.nrCardsInDeck = decksInput.getNrCardsInDeck();
         this.nrDecks = decksInput.getNrDecks();
         this.mana = 0;
         this.decks = new ArrayList<Deck>();
-
+        this.madeMove = 0;
         //iterate through Arraylist<ArrayList<CardInput>> to create all decks
         for(int i = 0; i < this.nrDecks; ++i) {
            Deck deckToAdd = new Deck(decksInput.getDecks().get(i));
@@ -41,12 +42,20 @@ public class Player {
             getActiveDeck().getCards().remove(0);
             //decrement the number of card in deck
             getActiveDeck().setNrCardsInDeck(getActiveDeck().getNrCardsInDeck() - 1);
+        } else {
+            System.out.printf("NOT ENOUGH CARDS \n");
         }
+
     }
 
     public void getNewHand() {
         this.playerHand = new ArrayList<>();
     }
 
+    public void makeCardsUnfrozen() {
+        for(Card card: playerHand) {
+            card.setFrozen(false);
+        }
+    }
 
 }

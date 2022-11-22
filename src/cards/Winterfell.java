@@ -20,6 +20,18 @@ public class Winterfell extends EnvironmentCard {
     public Winterfell(Card cardToCopy) {
         super(cardToCopy);
     }
+
+    @Override
+    public void attack(Card[][] table, int affectedRow) {
+        int elementsOnRow = 5;
+        for(int i = 0; i < elementsOnRow; i++) {
+            if (table[affectedRow][i] != null) {
+                table[affectedRow][i].setFrozen(true);
+            }
+        }
+
+    }
+
     @Override
     public void attack() {
 

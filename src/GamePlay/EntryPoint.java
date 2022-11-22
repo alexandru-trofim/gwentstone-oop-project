@@ -27,7 +27,6 @@ public class EntryPoint {
         }
         //game is set up
         Game game = new Game(playerOne, playerTwo, gameSessions);
-        System.out.printf(game.getGames().get(0).getGameStart().getPlayerOneHero().getName());
 
         //a cicle that plays all the games
         //fac o functie pentru play game

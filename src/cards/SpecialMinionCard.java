@@ -8,7 +8,6 @@ import java.util.ArrayList;
 abstract class SpecialMinionCard extends MinionCard{
 
 
-
     public SpecialMinionCard(Card cardToCopy) {
         super(cardToCopy);
     }
@@ -26,4 +25,8 @@ abstract class SpecialMinionCard extends MinionCard{
     public void specialAttack() {
 
     }
+
+
+
+
 }

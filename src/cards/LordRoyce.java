@@ -13,13 +13,5 @@ public class LordRoyce extends HeroCard {
     }
 
 
-    @Override
-    public void attack() {
 
-    }
-
-    @Override
-    public void specialAttack() {
-
-    }
 }

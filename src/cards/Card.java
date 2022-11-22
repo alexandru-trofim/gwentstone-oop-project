@@ -17,9 +17,12 @@ public abstract class Card {
     private @Getter @Setter String name;
     private @Getter @Setter boolean isTank;
     private @Getter @Setter boolean isFrozen;
+    private @Getter @Setter boolean madeMove;
+
 
     public abstract void attack();
     public abstract void specialAttack();
+
     public void convertCardToJson(ObjectNode cardOutput) {
         cardOutput.put("mana", this.getMana());
         cardOutput.put("attackDamage", this.getAttackDamage());
@@ -31,4 +34,16 @@ public abstract class Card {
         }
         cardOutput.put("name", this.getName());
     }
+
+    public void getDamage(int damage) {
+        this.health -= damage;
+    }
+
+    public boolean isDead() {
+        if (health <= 0)
+            return true;
+        else return false;
+    }
+
+
 }

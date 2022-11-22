@@ -8,9 +8,8 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 @Setter @Getter
-public class EnvironmentCard extends Card{
+public abstract class EnvironmentCard extends Card{
     //it has just mana, description, colors, name
-    private @Getter @Setter int mana;
 
     public  EnvironmentCard(CardInput cardInput) {
         this.setMana(cardInput.getMana());
@@ -25,15 +24,11 @@ public class EnvironmentCard extends Card{
         this.setColors(cardToCopy.getColors());
         this.setName(cardToCopy.getName());
     }
-    @Override
-    public void attack() {
 
-    }
 
-    @Override
-    public void specialAttack() {
+    public abstract void attack(Card[][] table, int affectedRow);
 
-    }
+
 
     @Override
     public void convertCardToJson(ObjectNode cardOutput) {
