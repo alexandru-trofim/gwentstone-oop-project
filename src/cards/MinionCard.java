@@ -36,12 +36,9 @@ public class MinionCard extends Card {
         this.setMadeMove(false);
     }
 
-    @Override
-    public void attack() {
 
-    }
     @Override
-    public void specialAttack() {
+    public void specialAttack(Card cardAttacked) {
 
     }
 

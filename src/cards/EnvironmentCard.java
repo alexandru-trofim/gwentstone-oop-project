@@ -28,8 +28,6 @@ public abstract class EnvironmentCard extends Card{
 
     public abstract void attack(Card[][] table, int affectedRow);
 
-
-
     @Override
     public void convertCardToJson(ObjectNode cardOutput) {
         cardOutput.put("mana", this.getMana());

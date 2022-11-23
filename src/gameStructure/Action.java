@@ -25,14 +25,21 @@ public class Action {
     public Action(ActionsInput actionsInput) {
         this.command = actionsInput.getCommand();
         this.handId = actionsInput.getHandIdx();
-        //this.cardAttacker.setX(actionsInput.getCardAttacker().getX());
-        //this.cardAttacker.setY(actionsInput.getCardAttacker().getY());
-        //this.cardAttacked.setX(actionsInput.getCardAttacked().getX());
-        //this.cardAttacked.setY(actionsInput.getCardAttacked().getY());
         this.affectedRow = actionsInput.getAffectedRow();
         this.playerIdx = actionsInput.getPlayerIdx();
         this.x = actionsInput.getX();
         this.y = actionsInput.getY();
+
+        if (actionsInput.getCardAttacker() != null) {
+            this.cardAttacker = new Coordinates();
+            this.cardAttacker.setX(actionsInput.getCardAttacker().getX());
+            this.cardAttacker.setY(actionsInput.getCardAttacker().getY());
+        }
+        if (actionsInput.getCardAttacked() != null) {
+            this.cardAttacked = new Coordinates();
+            this.cardAttacked.setX(actionsInput.getCardAttacked().getX());
+            this.cardAttacked.setY(actionsInput.getCardAttacked().getY());
+        }
 
     }
 
@@ -94,8 +101,10 @@ public class Action {
             System.out.printf("!!!OutOfBound!!!" + "\n");
             return;
         }
+
         Card currentCard = player.getPlayerHand().get(handId);
 
+        System.out.printf("ENVIRONMENT CARD: " + currentCard.getName() + " affectedRow " + affectedRow + "\n");
         if (!currentCard.getName().equals("Firestorm") &&
                 !currentCard.getName().equals("Winterfell") &&
                 !currentCard.getName().equals("Heart Hound")) {
@@ -139,9 +148,156 @@ public class Action {
 
 
     }
+    public boolean checkForTanks(Card[][] table, int frontRow, int backRow) {
+        int numberOfColumns = 5;
+        for(int i = 0; i < numberOfColumns; ++i) {
+            if (table[frontRow][i] != null) {
+                if (table[frontRow][i].isTank())
+                    return true;
+            }
+            if (table[backRow][i] != null) {
+                if (table[backRow][i].isTank())
+                    return true;
+            }
+        }
+        return false;
+    }
 
-    public void cardUsesAttack(Coordinates cardAttacker, Coordinates cardAttacked,
+    public void killCardAtPosition(Card[][] table, int x, int y) {
+        int cardsOnRow = 5;
+        for(int i = y; i < cardsOnRow - 1; ++i) {
+           table[x][i] = table[x][i + 1];
+        }
+
+        //erase last element on the row
+        table[x][cardsOnRow - 1] = null;
+
+    }
+
+    public void cardUsesAttack(Coordinates cardAttackerCoord, Coordinates cardAttackedCoord,
                                Card[][] table, int playerIdx, ArrayNode output) {
+
+        int frontRow;
+        int backRow;
+        Card cardAttacked = table[cardAttackedCoord.getX()][cardAttackedCoord.getY()];
+        Card cardAttacker = table[cardAttackerCoord.getX()][cardAttackerCoord.getY()];
+        if (cardAttacked == null || cardAttacker == null) {
+            System.out.printf("ATTACKER/ATTACKED null" + "\n");
+            return;
+        }
+        System.out.printf("card Attacker coord: x: " + cardAttackerCoord.getX() + " y: " + cardAttackerCoord.getY() + "\n");
+        System.out.printf("Attacker is Frozen " + cardAttacker.isFrozen() + "\n");
+
+        //front and back rows of enemy
+        if (playerIdx == 2) {
+            frontRow = 2;
+            backRow = 3;
+        } else {
+            frontRow = 1;
+            backRow = 0;
+        }
+
+        if (cardAttacker.isMadeMove()) {
+            Debug.cardAlreadyAttacked(cardAttackerCoord, cardAttackedCoord, output);
+            return;
+        }
+        if (cardAttackedCoord.getX() != frontRow &&
+                cardAttackedCoord.getX() != backRow) {
+            Debug.cardIsNotEnemy(cardAttackerCoord, cardAttackedCoord, output);
+            return;
+        }
+
+        if (cardAttacker.isFrozen() == true) {
+            Debug.cardIsFrozen(cardAttackerCoord, cardAttackedCoord, output);
+            return;
+        }
+
+
+        if (checkForTanks(table, frontRow, backRow) && !cardAttacked.isTank()) {
+            Debug.cardIsNotATank(cardAttackerCoord, cardAttackedCoord, output);
+            return;
+        }
+
+
+        cardAttacker.attack(cardAttacked);
+
+        if (cardAttacked.isDead()) {
+            killCardAtPosition(table, cardAttackedCoord.getX(), cardAttackedCoord.getY());
+        }
+
+    }
+
+    public void cardUsesAbility(Coordinates cardAttackerCoord, Coordinates cardAttackedCoord,
+                                Card[][] table, int playerIdx, ArrayNode output) {
+        int frontRow;
+        int backRow;
+        Card cardAttacked = table[cardAttackedCoord.getX()][cardAttackedCoord.getY()];
+        Card cardAttacker = table[cardAttackerCoord.getX()][cardAttackerCoord.getY()];
+
+        if (cardAttacked == null || cardAttacker == null) {
+            System.out.printf("ATTACKER/ATTACKED null" + "\n");
+            return;
+        }
+        System.out.printf("card Attacker coord: x:AAAAAAA " + cardAttackerCoord.getX() + " y: " + cardAttackerCoord.getY() + "\n");
+        System.out.printf("Attacker is Frozen " + cardAttacker.isFrozen() + "\n");
+
+        //front and back rows of enemy
+        if (playerIdx == 2) {
+            frontRow = 2;
+            backRow = 3;
+        } else {
+            frontRow = 1;
+            backRow = 0;
+        }
+
+        if (cardAttacker.isMadeMove()) {
+            Debug.cardAlreadyAttackedSpecial(cardAttackerCoord, cardAttackedCoord,
+                                                                            output);
+            return;
+        }
+
+        if (cardAttacker.getName().equals("Disciple")) {
+            if (cardAttackedCoord.getX() == frontRow ||
+                    cardAttackedCoord.getX() == backRow) {
+                Debug.cardIsEnemySpecial(cardAttackerCoord, cardAttackedCoord,
+                        output);
+                return;
+            }
+        }
+
+        if (cardAttacker.getName().equals("The Ripper") ||
+                cardAttacker.getName().equals("Miraj") ||
+                cardAttacker.getName().equals("The Cursed One")) {
+
+            if (cardAttackedCoord.getX() != frontRow &&
+                    cardAttackedCoord.getX() != backRow) {
+                Debug.cardIsNotEnemySpecial(cardAttackerCoord, cardAttackedCoord,
+                        output);
+                return;
+            }
+
+        }
+
+        if (cardAttacker.isFrozen()) {
+            Debug.cardIsFrozenSpecial(cardAttackerCoord, cardAttackedCoord,
+                    output);
+            return;
+        }
+
+
+        if (checkForTanks(table, frontRow, backRow) && !cardAttacked.isTank()) {
+            Debug.cardIsNotATankSpecial(cardAttackerCoord, cardAttackedCoord,
+                    output);
+            return;
+        }
+
+
+        cardAttacker.specialAttack(cardAttacked);
+
+        if (cardAttacked.isDead()) {
+            killCardAtPosition(table, cardAttackedCoord.getX(), cardAttackedCoord.getY());
+        }
+
 
     }
 

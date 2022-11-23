@@ -44,13 +44,10 @@ public class Firestorm extends EnvironmentCard {
     }
 
 
-    @Override
-    public void attack() {
 
-    }
 
     @Override
-    public void specialAttack() {
+    public void specialAttack(Card cardAttacked) {
 
     }
 }

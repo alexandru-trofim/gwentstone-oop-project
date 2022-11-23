@@ -1,10 +1,6 @@
 package cards;
 
 import fileio.CardInput;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.ArrayList;
 
 public class TheCursedOne extends SpecialMinionCard {
 
@@ -18,13 +14,20 @@ public class TheCursedOne extends SpecialMinionCard {
     public TheCursedOne(Card cardToCopy) {
         super(cardToCopy);
     }
-    @Override
-    public void attack() {
 
-    }
 
     @Override
-    public void specialAttack() {
+    public void specialAttack(Card cardAttacked) {
+        System.out.printf("SPECIAL ATTACK :" + this.getName()  + " CardATTACKED "+cardAttacked.getName() +" Health:" +
+                cardAttacked.getHealth() + "  Attack " + cardAttacked.getAttackDamage());
 
+        int aux = cardAttacked.getAttackDamage();
+        cardAttacked.setAttackDamage(cardAttacked.getHealth());
+        cardAttacked.setHealth(aux);
+
+        System.out.printf("SPECIAL ATTACK :" + this.getName()  + " CardATTACKED "+cardAttacked.getName() +" Health:" +
+                cardAttacked.getHealth() + "  Attack " + cardAttacked.getAttackDamage());
+
+        this.setMadeMove(true);
     }
 }

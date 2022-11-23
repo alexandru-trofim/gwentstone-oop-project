@@ -52,10 +52,6 @@ public class Player {
         this.playerHand = new ArrayList<>();
     }
 
-    public void makeCardsUnfrozen() {
-        for(Card card: playerHand) {
-            card.setFrozen(false);
-        }
-    }
+
 
 }

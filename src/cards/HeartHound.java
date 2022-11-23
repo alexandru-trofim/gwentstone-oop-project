@@ -1,6 +1,5 @@
 package cards;
 
-import debug.Debug;
 import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,13 +64,9 @@ public class HeartHound extends EnvironmentCard {
     }
 
 
-    @Override
-    public void attack() {
-
-    }
 
     @Override
-    public void specialAttack() {
+    public void specialAttack(Card cardAttacked) {
 
     }
 }

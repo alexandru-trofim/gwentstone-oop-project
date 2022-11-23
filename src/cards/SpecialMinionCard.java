@@ -1,10 +1,7 @@
 package cards;
 
 import fileio.CardInput;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.ArrayList;
 abstract class SpecialMinionCard extends MinionCard{
 
 
@@ -16,15 +13,7 @@ abstract class SpecialMinionCard extends MinionCard{
         super(cardInput);
     }
 
-    @Override
-    public void attack() {
-
-    }
-
-    @Override
-    public void specialAttack() {
-
-    }
+    
 
 
 

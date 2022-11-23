@@ -4,6 +4,7 @@ import cards.Card;
 import cards.EnvironmentCard;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import debug.Debug;
+import fileio.Coordinates;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,14 +41,34 @@ public class Game {
             }
         }
     }
+
+    public void makeCardsUnfrozen() {
+        int numberOfRows = 4;
+        int numberOfColumns = 5;
+        int start, end;
+        if (playerToMove == 1) {
+            start = 2;
+            end = 3;
+        } else {
+            start = 0;
+            end = 1;
+        }
+        for (int i = start; i <= end; ++i) {
+            for (int j = 0; j < numberOfColumns; ++j) {
+                if (gameTable[i][j] != null) {
+                    gameTable[i][j].setFrozen(false);
+                }
+            }
+        }
+    }
     public void endPlayerTurn() {
+        makeCardsUnfrozen();
         //if the current player ended his turn and so did the other player
         //then we end the round
         if((playerToMove == 1 && playerTwo.getMadeMove() == 1) ||
                 (playerToMove == 2 && playerOne.getMadeMove() == 1)) {
             //end round
-            playerOne.makeCardsUnfrozen();
-            playerTwo.makeCardsUnfrozen();
+
 
             playerOne.getCardFromDeck();
             playerTwo.getCardFromDeck();
@@ -59,14 +80,15 @@ public class Game {
             resetCardMadeMove();
 
             currentRound += 1;
-            if (currentRound <= 10) {
-                playerOne.setMana(playerOne.getMana() + currentRound);
-                playerTwo.setMana(playerTwo.getMana() + currentRound);
 
-            } else {
-                playerOne.setMana(playerOne.getMana() + 10);
-                playerTwo.setMana(playerTwo.getMana() + 10);
-            }
+            int addMana;
+            if (currentRound <= 10)
+                addMana = currentRound;
+            else
+                addMana = 10;
+
+            playerOne.setMana(playerOne.getMana() + addMana);
+            playerTwo.setMana(playerTwo.getMana() + addMana);
 
             if (playerToMove == 1)
                 playerToMove = 2;
@@ -205,10 +227,26 @@ public class Game {
                 case "getFrozenCardsOnTable":
                     Debug.getFrozenCardsOnTable(gameTable, output);
                     break;
+                case "cardUsesAttack":
+                    currentAction.cardUsesAttack(currentAction.getCardAttacker(),
+                                                currentAction.getCardAttacked(),
+                                                gameTable,
+                                                playerToMove,
+                                                output);
+                    break;
+                case "cardUsesAbility":
+                    currentAction.cardUsesAbility(currentAction.getCardAttacker(),
+                            currentAction.getCardAttacked(),
+                            gameTable,
+                            playerToMove,
+                            output);
+                    break;
 
 
 
             }
         }
     }
+
+
 }

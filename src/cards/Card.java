@@ -20,8 +20,12 @@ public abstract class Card {
     private @Getter @Setter boolean madeMove;
 
 
-    public abstract void attack();
-    public abstract void specialAttack();
+    public void attack(Card cardToAttack) {
+       cardToAttack.health -= this.attackDamage;
+
+       this.madeMove = true;
+    }
+    public abstract void specialAttack(Card cardAttacked);
 
     public void convertCardToJson(ObjectNode cardOutput) {
         cardOutput.put("mana", this.getMana());
