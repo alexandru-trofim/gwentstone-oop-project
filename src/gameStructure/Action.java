@@ -2,6 +2,7 @@ package gameStructure;
 
 import cards.Card;
 import cards.EnvironmentCard;
+import cards.HeroCard;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import debug.Debug;
 import fileio.ActionsInput;
@@ -186,6 +187,7 @@ public class Action {
             return;
         }
         System.out.printf("card Attacker coord: x: " + cardAttackerCoord.getX() + " y: " + cardAttackerCoord.getY() + "\n");
+        System.out.printf("card Attacked coord: x: " + cardAttackedCoord.getX() + " y: " + cardAttackedCoord.getY() + "\n");
         System.out.printf("Attacker is Frozen " + cardAttacker.isFrozen() + "\n");
 
         //front and back rows of enemy
@@ -198,23 +200,27 @@ public class Action {
         }
 
         if (cardAttacker.isMadeMove()) {
-            Debug.cardAlreadyAttacked(cardAttackerCoord, cardAttackedCoord, output);
+            Debug.cardAlreadyAttacked(cardAttackerCoord, cardAttackedCoord,
+                                    "cardUsesAttack", output);
             return;
         }
         if (cardAttackedCoord.getX() != frontRow &&
                 cardAttackedCoord.getX() != backRow) {
-            Debug.cardIsNotEnemy(cardAttackerCoord, cardAttackedCoord, output);
+            Debug.cardIsNotEnemy(cardAttackerCoord, cardAttackedCoord,
+                    "cardUsesAttack", output);
             return;
         }
 
         if (cardAttacker.isFrozen() == true) {
-            Debug.cardIsFrozen(cardAttackerCoord, cardAttackedCoord, output);
+            Debug.cardIsFrozen(cardAttackerCoord, cardAttackedCoord,
+                   "cardUsesAttack", output);
             return;
         }
 
 
         if (checkForTanks(table, frontRow, backRow) && !cardAttacked.isTank()) {
-            Debug.cardIsNotATank(cardAttackerCoord, cardAttackedCoord, output);
+            Debug.cardIsNotATank(cardAttackerCoord, cardAttackedCoord,
+                    "cardUsesAttack", output);
             return;
         }
 
@@ -238,7 +244,8 @@ public class Action {
             System.out.printf("ATTACKER/ATTACKED null" + "\n");
             return;
         }
-        System.out.printf("card Attacker coord: x:AAAAAAA " + cardAttackerCoord.getX() + " y: " + cardAttackerCoord.getY() + "\n");
+        System.out.printf("card Attacker coord: x: " + cardAttackerCoord.getX() + " y: " + cardAttackerCoord.getY() + "\n");
+        System.out.printf("card Attacked coord: x: " + cardAttackedCoord.getX() + " y: " + cardAttackedCoord.getY() + "\n");
         System.out.printf("Attacker is Frozen " + cardAttacker.isFrozen() + "\n");
 
         //front and back rows of enemy
@@ -251,8 +258,8 @@ public class Action {
         }
 
         if (cardAttacker.isMadeMove()) {
-            Debug.cardAlreadyAttackedSpecial(cardAttackerCoord, cardAttackedCoord,
-                                                                            output);
+            Debug.cardAlreadyAttacked(cardAttackerCoord, cardAttackedCoord,
+                                    "cardUsesAbility", output);
             return;
         }
 
@@ -271,23 +278,26 @@ public class Action {
 
             if (cardAttackedCoord.getX() != frontRow &&
                     cardAttackedCoord.getX() != backRow) {
-                Debug.cardIsNotEnemySpecial(cardAttackerCoord, cardAttackedCoord,
-                        output);
+                Debug.cardIsNotEnemy(cardAttackerCoord, cardAttackedCoord,
+                        "cardUsesAbility", output);
                 return;
             }
 
         }
 
         if (cardAttacker.isFrozen()) {
-            Debug.cardIsFrozenSpecial(cardAttackerCoord, cardAttackedCoord,
-                    output);
+            Debug.cardIsFrozen(cardAttackerCoord, cardAttackedCoord,
+                    "cardUsesAbility", output);
             return;
         }
 
 
-        if (checkForTanks(table, frontRow, backRow) && !cardAttacked.isTank()) {
-            Debug.cardIsNotATankSpecial(cardAttackerCoord, cardAttackedCoord,
-                    output);
+        if (checkForTanks(table, frontRow, backRow) && !cardAttacked.isTank()
+            && !cardAttacker.getName().equals("Disciple")) {
+
+            Debug.printTable();
+            Debug.cardIsNotATank(cardAttackerCoord, cardAttackedCoord,
+                    "cardUsesAbility", output);
             return;
         }
 
@@ -297,6 +307,106 @@ public class Action {
         if (cardAttacked.isDead()) {
             killCardAtPosition(table, cardAttackedCoord.getX(), cardAttackedCoord.getY());
         }
+
+
+    }
+
+    public void useAtatckHero(Card[][] table, Coordinates attackerCoord, int playerIdx,
+                                                            Card hero, ArrayNode output) {
+
+        Card attacker = table[attackerCoord.getX()][attackerCoord.getY()];
+
+        int frontRow, backRow;
+        //front and back rows of enemy
+        if (playerIdx == 2) {
+            frontRow = 2;
+            backRow = 3;
+        } else {
+            frontRow = 1;
+            backRow = 0;
+        }
+
+        Coordinates thereIsNoAttacked = new Coordinates();
+
+        if (attacker.isFrozen()) {
+            Debug.cardIsFrozen(attackerCoord, thereIsNoAttacked,
+                    "useAttackHero", output);
+            return;
+        }
+        if (attacker.isMadeMove()) {
+            Debug.cardAlreadyAttacked(attackerCoord, thereIsNoAttacked,
+                    "useAttackHero", output);
+            return;
+        }
+        if (checkForTanks(table, frontRow, backRow)) {
+            Debug.cardIsNotATank(attackerCoord,thereIsNoAttacked,
+                    "useAttackHero", output);
+            return;
+        }
+
+        attacker.attack(hero);
+        if (hero.isDead()) {
+            Debug.gameEnd(playerIdx, output);
+            Game.setTotalGamesPlayed(Game.getTotalGamesPlayed() + 1);
+
+            if (playerIdx == 1)
+                Game.setPlayerOneWins(Game.getPlayerOneWins() + 1);
+            else
+                Game.setPlayerTwoWins(Game.getPlayerTwoWins() + 1);
+
+
+        }
+    }
+
+    public void useHeroAbility(Card[][] table, Player player, int playerId, ArrayNode output) {
+        System.out.printf("ENTER HERO ABILITY" + "\n");
+        int frontRow, backRow;
+        //front and back rows of enemy
+        if (playerId == 2) {
+            frontRow = 2;
+            backRow = 3;
+        } else {
+            frontRow = 1;
+            backRow = 0;
+        }
+
+        Card hero = player.getPlayerHero();
+
+        if (player.getMana() < hero.getMana()) {
+
+            Debug.notEnoughManaHero(affectedRow, output);
+            return;
+        }
+
+        if (hero.isMadeMove()) {
+            Debug.heroAlreadyAttacked(affectedRow, output);
+            return;
+        }
+
+        if (hero.getName().equals("Empress Thorina") ||
+            hero.getName().equals("Lord Royce")) {
+            if (affectedRow != backRow && affectedRow != frontRow) {
+                Debug.rowNotEnemyHero(affectedRow, output);
+                return;
+            }
+        }
+
+        if (hero.getName().equals("General Kocioraw") ||
+                hero.getName().equals("King Mudface")) {
+            if (affectedRow == backRow || affectedRow == frontRow) {
+                Debug.rowNotAllyHero(affectedRow, output);
+                return;
+            }
+        }
+
+        //use environment card
+        HeroCard castedCard = (HeroCard) hero;
+        castedCard.attack(table, affectedRow);
+
+        player.setMana(player.getMana() - hero.getMana());
+
+
+
 
 
     }

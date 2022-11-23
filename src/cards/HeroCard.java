@@ -4,23 +4,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 
-public class HeroCard extends Card{
+public abstract class HeroCard extends EnvironmentCard{
 
     public HeroCard(CardInput cardInput) {
+        super(cardInput);
         this.setMana(cardInput.getMana());
-        this.setDescription(cardInput.getDescription());
-        this.setColors(cardInput.getColors());
-        this.setName(cardInput.getName());
         this.setFrozen(false);
         this.setHealth(30);
-    }
-
-
-
-
-    @Override
-    public void specialAttack(Card cardAttacked) {
-
     }
 
     public void convertCardToJson(ObjectNode cardOutput) {

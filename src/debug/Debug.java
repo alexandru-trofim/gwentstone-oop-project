@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.Coordinates;
 import gameStructure.Deck;
+import gameStructure.Game;
 import gameStructure.Player;
 
 import java.awt.image.AreaAveragingScaleFilter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -203,6 +205,21 @@ public class Debug {
 
     }
 
+    public static void getRightCommandName(String commandName, ObjectNode commandOutput) {
+        switch (commandName) {
+            case "cardUsesAttack":
+                commandOutput.put("command", "cardUsesAttack");
+                break;
+            case "cardUsesAbility":
+                commandOutput.put("command", "cardUsesAbility");
+                break;
+            case "useAttackHero":
+                commandOutput.put("command", "useAttackHero");
+                break;
+
+        }
+    }
+
     public static void getFrozenCardsOnTable(Card[][] table, ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "getFrozenCardsOnTable");
@@ -222,140 +239,79 @@ public class Debug {
     }
 
     public static void cardIsNotATank (Coordinates cardAttacker, Coordinates cardAttacked,
-                                                                        ArrayNode output) {
+                                       String commandName,  ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAttack");
+        getRightCommandName(commandName, commandOutput);
 
         ObjectNode attacker = commandOutput.putObject("cardAttacker");
         attacker.put("x", cardAttacker.getX());
         attacker.put("y", cardAttacker.getY());
 
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
-
+        if (!commandName.equals("useAttackHero")) {
+            ObjectNode attacked = commandOutput.putObject("cardAttacked");
+            attacked.put("x", cardAttacked.getX());
+            attacked.put("y", cardAttacked.getY());
+        }
         commandOutput.put("error", "Attacked card is not of type 'Tank'.");
 
         output.add(commandOutput);
     }
     public static void cardIsNotEnemy(Coordinates cardAttacker, Coordinates cardAttacked,
-                                      ArrayNode output) {
+                                      String commandName, ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAttack");
+        getRightCommandName(commandName, commandOutput);
 
         ObjectNode attacker = commandOutput.putObject("cardAttacker");
         attacker.put("x", cardAttacker.getX());
         attacker.put("y", cardAttacker.getY());
 
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
+        if (!commandName.equals("useAttackHero")) {
+            ObjectNode attacked = commandOutput.putObject("cardAttacked");
+            attacked.put("x", cardAttacked.getX());
+            attacked.put("y", cardAttacked.getY());
+        }
 
         commandOutput.put("error", "Attacked card does not belong to the enemy.");
 
         output.add(commandOutput);
     }
     public static void cardIsFrozen(Coordinates cardAttacker, Coordinates cardAttacked,
-                                      ArrayNode output) {
+                                      String commandName, ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAttack");
+        getRightCommandName(commandName, commandOutput);
 
         ObjectNode attacker = commandOutput.putObject("cardAttacker");
         attacker.put("x", cardAttacker.getX());
         attacker.put("y", cardAttacker.getY());
 
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
+        if (!commandName.equals("useAttackHero")) {
+            ObjectNode attacked = commandOutput.putObject("cardAttacked");
+            attacked.put("x", cardAttacked.getX());
+            attacked.put("y", cardAttacked.getY());
+        }
 
         commandOutput.put("error", "Attacker card is frozen.");
         output.add(commandOutput);
     }
     public static void cardAlreadyAttacked(Coordinates cardAttacker, Coordinates cardAttacked,
-                                    ArrayNode output) {
+                                    String commandName, ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAttack");
+        getRightCommandName(commandName, commandOutput);
 
         ObjectNode attacker = commandOutput.putObject("cardAttacker");
         attacker.put("x", cardAttacker.getX());
         attacker.put("y", cardAttacker.getY());
 
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
-
-        commandOutput.put("error", "Attacker card has already attacked this turn.");
-        output.add(commandOutput);
-    }
-    public static void cardAlreadyAttackedSpecial(Coordinates cardAttacker, Coordinates cardAttacked,
-                                           ArrayNode output) {
-        ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAbility");
-
-        ObjectNode attacker = commandOutput.putObject("cardAttacker");
-        attacker.put("x", cardAttacker.getX());
-        attacker.put("y", cardAttacker.getY());
-
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
-
+        if (!commandName.equals("useAttackHero")) {
+            ObjectNode attacked = commandOutput.putObject("cardAttacked");
+            attacked.put("x", cardAttacked.getX());
+            attacked.put("y", cardAttacked.getY());
+        }
         commandOutput.put("error", "Attacker card has already attacked this turn.");
         output.add(commandOutput);
     }
 
-    public static void cardIsFrozenSpecial(Coordinates cardAttacker, Coordinates cardAttacked,
-                                    ArrayNode output) {
-        ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAbility");
 
-        ObjectNode attacker = commandOutput.putObject("cardAttacker");
-        attacker.put("x", cardAttacker.getX());
-        attacker.put("y", cardAttacker.getY());
-
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
-
-        commandOutput.put("error", "Attacker card is frozen.");
-        output.add(commandOutput);
-    }
-
-    public static void cardIsNotATankSpecial (Coordinates cardAttacker, Coordinates cardAttacked,
-                                       ArrayNode output) {
-        ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAbility");
-
-        ObjectNode attacker = commandOutput.putObject("cardAttacker");
-        attacker.put("x", cardAttacker.getX());
-        attacker.put("y", cardAttacker.getY());
-
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
-
-        commandOutput.put("error", "Attacked card is not of type 'Tank'.");
-
-        output.add(commandOutput);
-    }
-
-    public static void cardIsNotEnemySpecial(Coordinates cardAttacker, Coordinates cardAttacked,
-                                      ArrayNode output) {
-        ObjectNode commandOutput = output.objectNode();
-        commandOutput.put("command", "cardUsesAbility");
-
-        ObjectNode attacker = commandOutput.putObject("cardAttacker");
-        attacker.put("x", cardAttacker.getX());
-        attacker.put("y", cardAttacker.getY());
-
-        ObjectNode attacked = commandOutput.putObject("cardAttacked");
-        attacked.put("x", cardAttacked.getX());
-        attacked.put("y", cardAttacked.getY());
-
-        commandOutput.put("error", "Attacked card does not belong to the enemy.");
-
-        output.add(commandOutput);
-    }
 
     public static void cardIsEnemySpecial(Coordinates cardAttacker, Coordinates cardAttacked,
                                              ArrayNode output) {
@@ -373,5 +329,95 @@ public class Debug {
         commandOutput.put("error", "Attacked card does not belong to the current player.");
 
         output.add(commandOutput);
+    }
+
+    public static void gameEnd(int currentPlayer, ArrayNode output) {
+
+        ObjectNode commandOutput = output.objectNode();
+        if (currentPlayer == 1) {
+            commandOutput.put("gameEnded", "Player one killed the enemy hero.");
+        } else {
+            commandOutput.put("gameEnded", "Player two killed the enemy hero.");
+        }
+
+        output.add(commandOutput);
+    }
+
+    public static void notEnoughManaHero(int affectedRow, ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "useHeroAbility");
+        commandOutput.put("affectedRow", affectedRow);
+        commandOutput.put("error","Not enough mana to use hero's ability.");
+
+        output.add(commandOutput);
+    }
+    public static void heroAlreadyAttacked(int affectedRow, ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "useHeroAbility");
+        commandOutput.put("affectedRow", affectedRow);
+        commandOutput.put("error","Hero has already attacked this turn.");
+
+        output.add(commandOutput);
+    }
+    public static void rowNotEnemyHero(int affectedRow, ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "useHeroAbility");
+        commandOutput.put("affectedRow", affectedRow);
+        commandOutput.put("error", "Selected row does not belong to the enemy.");
+
+        output.add(commandOutput);
+    }
+    public static void rowNotAllyHero(int affectedRow, ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "useHeroAbility");
+        commandOutput.put("affectedRow", affectedRow);
+        commandOutput.put("error", "Selected row does not belong to the current player.");
+
+        output.add(commandOutput);
+    }
+    public static void getPlayerOneWins(ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "getPlayerOneWins");
+        commandOutput.put("output", Game.getPlayerOneWins());
+
+        output.add(commandOutput);
+    }
+
+    public static void getPlayerTwoWins(ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "getPlayerTwoWins");
+        commandOutput.put("output", Game.getPlayerTwoWins());
+
+        output.add(commandOutput);
+    }
+
+    public static void getTotalGamesPlayed(ArrayNode output) {
+        ObjectNode commandOutput = output.objectNode();
+
+        commandOutput.put("command", "getTotalGamesPlayed");
+        commandOutput.put("output", Game.getTotalGamesPlayed());
+
+        output.add(commandOutput);
+    }
+    public static void printTable() {
+        Card[][] table = Game.getGameTable();
+        for(int i = 3; i >= 0; i--) {
+            System.out.printf("row " + i + " :");
+            for( int j = 0;  j < 5; j++) {
+                if(table[i][j] != null) {
+
+                    System.out.printf(table[i][j].getName() + "   ");
+                } else {
+                    System.out.printf("NULL   ");
+                }
+            }
+            System.out.printf("\n");
+        }
     }
 }

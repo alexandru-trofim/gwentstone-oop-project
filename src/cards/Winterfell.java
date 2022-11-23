@@ -23,7 +23,6 @@ public class Winterfell extends EnvironmentCard {
 
     @Override
     public void attack(Card[][] table, int affectedRow) {
-        System.out.printf("WINTERFELL ATTACKING ROW :" + affectedRow + "\n");
         int elementsOnRow = 5;
         for(int i = 0; i < elementsOnRow; i++) {
             if (table[affectedRow][i] != null) {

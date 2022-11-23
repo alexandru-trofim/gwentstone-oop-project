@@ -22,7 +22,7 @@ public class GameStart {
             case "Lord Royce" -> new LordRoyce(card);
             case "Empress Thorina" -> new EmpressThorina(card);
             case "General Kocioraw" -> new GeneralKocioraw(card);
-            default -> new HeroCard(card);
+            default -> null;
         };
     }
 

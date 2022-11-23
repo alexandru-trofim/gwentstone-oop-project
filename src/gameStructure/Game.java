@@ -17,14 +17,22 @@ public class Game {
     private @Getter @Setter Player playerTwo;
     private @Getter @Setter ArrayList<GameSession> games;
 
-    private @Getter @Setter Card[][]  gameTable;
+    private @Getter @Setter static Card[][]  gameTable;
     private @Getter @Setter int playerToMove;
     private @Getter @Setter int currentRound;
+
+    private @Getter @Setter static int totalGamesPlayed;
+    private @Getter @Setter static int playerOneWins;
+    private @Getter @Setter static int playerTwoWins;
+
 
     public Game(Player playerOne, Player playerTwo, ArrayList<GameSession> games) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.games = games;
+        this.totalGamesPlayed = 0;
+        this.playerOneWins = 0;
+        this.playerTwoWins = 0;
     }
 
 
@@ -69,7 +77,6 @@ public class Game {
                 (playerToMove == 2 && playerOne.getMadeMove() == 1)) {
             //end round
 
-
             playerOne.getCardFromDeck();
             playerTwo.getCardFromDeck();
 
@@ -78,6 +85,10 @@ public class Game {
 
             //set All cards property Made move to false
             resetCardMadeMove();
+
+            //reset Player heroes MadeMove property
+            playerOne.getPlayerHero().setMadeMove(false);
+            playerTwo.getPlayerHero().setMadeMove(false);
 
             currentRound += 1;
 
@@ -241,7 +252,38 @@ public class Game {
                             playerToMove,
                             output);
                     break;
-
+                case "useAttackHero":
+                    Card hero;
+                    if (playerToMove == 1) {
+                        hero = playerTwo.getPlayerHero();
+                    } else {
+                        hero = playerOne.getPlayerHero();
+                    }
+                    currentAction.useAtatckHero(gameTable,
+                            currentAction.getCardAttacker(),
+                            playerToMove,
+                            hero,
+                            output);
+                    break;
+                case "useHeroAbility":
+                    Player player = null;
+                    if (playerToMove == 1) {
+                        player = playerOne;
+                    } else {
+                        player = playerTwo;
+                    }
+                    currentAction.useHeroAbility(gameTable,
+                            player, playerToMove, output);
+                    break;
+                case "getTotalGamesPlayed":
+                    Debug.getTotalGamesPlayed(output);
+                    break;
+                case "getPlayerOneWins":
+                    Debug.getPlayerOneWins(output);
+                    break;
+                case "getPlayerTwoWins":
+                    Debug.getPlayerTwoWins(output);
+                    break;
 
 
             }

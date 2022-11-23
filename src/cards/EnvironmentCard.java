@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-@Setter @Getter
 public abstract class EnvironmentCard extends Card{
     //it has just mana, description, colors, name
 
