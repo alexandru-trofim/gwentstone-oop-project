@@ -61,17 +61,33 @@ HeroCard class extend the EnvironmentCard Class and is a base for Hero Card clas
 implement their own abilities.
 
 ## game package
-The game package contains two other packages. 
-
-### Deck 
+The game package contains two other packages: structure and play. 
+### structure
+#### Deck 
 The deck class basically keeps an array of cards.
-### Player
+#### Player
 This class implements the player with all the necessary attributes like Decks, Player Hand, 
 Player Hero, mana and an internal property madeMove that helps the game keep track if the 
 player made his move on the current round.
-### GameStart
+#### GameStart
 This class contains all the required info to start a game like the heroes of the players, 
-the starting player 
+the starting player and which decks should pick the first and the second player for this game.
+#### GameSession
+The GameSession class contains a GameStart object and an array of Actions. It has all the data
+needed to initialize and play a game.
+#### Game
+Game is the class that uses all the classes described above and is responsible for the 
+initialization and execution of a single game. It also has properties for statistics like
+the number of games played or how many times a player won.
+### play
+play package contains two classes: Action, Entrypoint. 
+#### Action
+Action implements all the functions related to actions made by players like 
+place a card on a table, attack a card, use ability of a card or a hero. 
 
-
+## Debug
+Debug package has only a class named Debug. It is a static class, and it implements all 
+the functionality for writing outputs in a JSON file, throwing errors and display statistics.
+I made this class static so that I can output an error without instantiating a class.
+A prototype for the Debug class was the "Log" class discussed at the course.
 
