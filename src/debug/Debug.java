@@ -1,28 +1,30 @@
 package debug;
 
 import cards.Card;
-import cards.HeroCard;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.Coordinates;
-import gameStructure.Deck;
-import gameStructure.Game;
-import gameStructure.Player;
+import game.structure.Deck;
+import game.structure.Game;
 
-import java.awt.image.AreaAveragingScaleFilter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Debug {
 
-    public static void getPlayerDeck(Deck playerDeck, ArrayNode output, int playerId) {
+    /**
+     * Outputs the player deck given as a parameter
+     * @param playerDeck the deck that will be printed
+     * @param output output ArrayNode
+     * @param playerId current player ID
+     */
+    public static void getPlayerDeck(final Deck playerDeck, final ArrayNode output,
+                                     final int playerId) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "getPlayerDeck");
-        commandOutput.put("playerIdx",playerId);
+        commandOutput.put("playerIdx", playerId);
 
-        ArrayNode deckOutput= commandOutput.putArray("output");
-        for(Card card: playerDeck.getCards()) {
+        ArrayNode deckOutput = commandOutput.putArray("output");
+        for (Card card: playerDeck.getCards()) {
             ObjectNode cardOutput = deckOutput.objectNode();
 
             card.convertCardToJson(cardOutput);
@@ -34,11 +36,18 @@ public class Debug {
 
     }
 
-    public static void getPlayerHero(Card heroCard, ArrayNode output, int playerId) {
+    /**
+     * Outputs the player hero given as a parameter.
+     * @param heroCard hero card
+     * @param output output ArrayNode
+     * @param playerId current player ID
+     */
+    public static void getPlayerHero(final Card heroCard, final ArrayNode output,
+                                     final int playerId) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "getPlayerHero");
-        commandOutput.put("playerIdx",playerId);
+        commandOutput.put("playerIdx", playerId);
 
         ObjectNode hero = commandOutput.putObject("output");
         heroCard.convertCardToJson(hero);
@@ -46,7 +55,12 @@ public class Debug {
        output.add(commandOutput);
     }
 
-    public static void getPlayerTurn(int playerToMove, ArrayNode output) {
+    /**
+     * Outputs the player ID of the player that has the turn.
+     * @param playerToMove player ID of the current player
+     * @param output output ArrayNode
+     */
+    public static void getPlayerTurn(final int playerToMove, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "getPlayerTurn");
@@ -55,15 +69,22 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void getCardsInHand(ArrayList<Card> playerHand,ArrayNode output, int playerId) {
+    /**
+     * Outputs the cards in the hand of the player that has the turn.
+     * @param playerHand player hand
+     * @param output output ArrayNode
+     * @param playerId the ID of the player that has the turn
+     */
+    public static void getCardsInHand(final ArrayList<Card> playerHand, final ArrayNode output,
+                                      final int playerId) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "getCardsInHand");
         commandOutput.put("playerIdx", playerId);
 
-        ArrayNode handOutput= commandOutput.putArray("output");
+        ArrayNode handOutput = commandOutput.putArray("output");
 
-        for(Card card: playerHand) {
+        for (Card card: playerHand) {
             ObjectNode cardOutput = handOutput.objectNode();
 
             card.convertCardToJson(cardOutput);
@@ -73,7 +94,13 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void getPlayerMana(int mana,ArrayNode output, int playerId) {
+    /**
+     * Outputs the mana of the player given as a parameter
+     * @param mana mana that will be outputed
+     * @param output output ArrayNode
+     * @param playerId the ID of the player
+     */
+    public static void getPlayerMana(final int mana, final ArrayNode output, final  int playerId) {
        ObjectNode commandOutput = output.objectNode();
 
        commandOutput.put("command", "getPlayerMana");
@@ -83,14 +110,19 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void getCardsOnTable(Card[][] table, ArrayNode output) {
+    /**
+     * Outputs all the card on the table
+     * @param table Game table
+     * @param output output ArrayNode
+     */
+    public static void getCardsOnTable(final Card[][] table, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "getCardsOnTable");
 
         ArrayNode deckOutput = commandOutput.putArray("output");
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < Game.NR_OF_ROWS; i++) {
             ArrayNode row = commandOutput.arrayNode();
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < Game.CARDS_ON_ROW; j++) {
                 if (table[i][j] != null) {
                     ObjectNode cardOutput = row.objectNode();
 
@@ -103,7 +135,13 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void environmentCardError(int handIdx, ArrayNode output) {
+    /**
+     * Outputs error when a player want to use an environment card but the card
+     * chosen is not envirnoment
+     * @param handIdx the id of the card in hand
+     * @param output output ArrayNode
+     */
+    public static void environmentCardError(final int handIdx, final ArrayNode output) {
        ObjectNode commandOutput = output.objectNode();
        commandOutput.put("command", "placeCard");
        commandOutput.put("handIdx", handIdx);
@@ -111,14 +149,26 @@ public class Debug {
 
        output.add(commandOutput);
     }
-    public static void notEnoughManaError(int handIdx, ArrayNode output) {
+
+    /**
+     * Outputs error when not enough mana to use a card
+     * @param handIdx the id of the card in hand
+     * @param output output ArrayNode
+     */
+    public static void notEnoughManaError(final int handIdx, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "placeCard");
         commandOutput.put("handIdx", handIdx);
         commandOutput.put("error", "Not enough mana to place card on table.");
         output.add(commandOutput);
     }
-    public static void notEnoughSpaceError(int handIdx, ArrayNode output) {
+
+    /**
+     * Outputs error when not enough space to place a card
+     * @param handIdx the id of the card in hand
+     * @param output output ArrayNode
+     */
+    public static void notEnoughSpaceError(final int handIdx, final  ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "placeCard");
         commandOutput.put("handIdx", handIdx);
@@ -126,17 +176,24 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void getEnvironmentCardsInHand(ArrayList<Card> playerHand, ArrayNode output, int playerId) {
+    /**
+     * Outputs all the environment cards of a player hand given as a parameter
+     * @param playerHand the hand of the active player
+     * @param output outputArraylist
+     * @param playerId the ID of the player
+     */
+    public static void getEnvironmentCardsInHand(final ArrayList<Card> playerHand,
+                                                 final ArrayNode output, final int playerId) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "getEnvironmentCardsInHand");
         commandOutput.put("playerIdx", playerId);
 
-            ArrayNode handOutput= commandOutput.putArray("output");
+            ArrayNode handOutput = commandOutput.putArray("output");
 
-            for(Card card: playerHand) {
+            for (Card card: playerHand) {
                 //check if is Environment type
-                if( card.getName().equals("Firestorm") || card.getName().equals("Winterfell") ||
-                        card.getName().equals("Heart Hound")) {
+                if (card.getName().equals("Firestorm") || card.getName().equals("Winterfell")
+                        || card.getName().equals("Heart Hound")) {
                     ObjectNode cardOutput = handOutput.objectNode();
                     card.convertCardToJson(cardOutput);
                     handOutput.add(cardOutput);
@@ -145,7 +202,15 @@ public class Debug {
             output.add(commandOutput);
     }
 
-    public static void getCardAtPosition(int x, int y, Card[][] table, ArrayNode output) {
+    /**
+     * Outputs the card on that table that is on the positon given as input.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param table Game table
+     * @param output output ArrayNode
+     */
+    public static void getCardAtPosition(final int x, final int y, final Card[][] table,
+                                         final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "getCardAtPosition");
         commandOutput.put("x", x);
@@ -161,18 +226,32 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void notEnvironmentCard(int handId, int affectedRow, ArrayNode output) {
+    /**
+     *Outputs error when a player want to use an environment card but the card.
+     * @param handIdx the id of the card in hand
+     * @param affectedRow the row affected by the environment card
+     * @param output output ArrayNode
+     */
+    public static void notEnvironmentCard(final int handIdx, final int affectedRow,
+                                          final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "useEnvironmentCard");
-        commandOutput.put("handIdx", handId);
+        commandOutput.put("handIdx", handIdx);
         commandOutput.put("affectedRow", affectedRow);
         commandOutput.put("error", "Chosen card is not of type environment.");
 
         output.add(commandOutput);
-
     }
 
-    public static void notEnoughManaEnvironment(int handId, int affectedRow, ArrayNode output) {
+    /**
+     * Outputs error when a player tries to use an environment
+     * card but hasn't enough mana.
+     * @param handId the ID of the card in hand
+     * @param affectedRow the attacked row by the envirnoment card
+     * @param output output ArrayNode
+     */
+    public static void notEnoughManaEnvironment(final int handId, final int affectedRow,
+                                                final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "useEnvironmentCard");
         commandOutput.put("handIdx", handId);
@@ -183,7 +262,15 @@ public class Debug {
 
     }
 
-    public static void environmentAttacksOwnRow(int handId, int affectedRow, ArrayNode output) {
+    /**
+     * Outputs an errror when the player tries to attack his own
+     * row with an environment card.
+     * @param handId the ID of the card in hand
+     * @param affectedRow the row that is attacked by the environment card
+     * @param output output ArrayNode
+     */
+    public static void environmentAttacksOwnRow(final int handId, final int affectedRow,
+                                                final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "useEnvironmentCard");
         commandOutput.put("handIdx", handId);
@@ -191,10 +278,17 @@ public class Debug {
         commandOutput.put("error", "Chosen row does not belong to the enemy.");
 
         output.add(commandOutput);
-
     }
 
-    public static void cannotStealCardFullRow(int handId, int affectedRow, ArrayNode output) {
+    /**
+     * Outputs an error when a player tries to steal a card from enemy.
+     * but has a full row
+     * @param handId the ID of the
+     * @param affectedRow the row attacked bu the environment card
+     * @param output output ArrayNode
+     */
+    public static void cannotStealCardFullRow(final int handId, final int affectedRow,
+                                              final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "useEnvironmentCard");
         commandOutput.put("handIdx", handId);
@@ -202,10 +296,15 @@ public class Debug {
         commandOutput.put("error", "Cannot steal enemy card since the player's row is full.");
 
         output.add(commandOutput);
-
     }
 
-    public static void getRightCommandName(String commandName, ObjectNode commandOutput) {
+    /**
+     * A helper function that puts the command name to the output.
+     * @param commandName the name of the command
+     * @param commandOutput output
+     */
+    private static void getRightCommandName(final String commandName,
+                                           final ObjectNode commandOutput) {
         switch (commandName) {
             case "cardUsesAttack":
                 commandOutput.put("command", "cardUsesAttack");
@@ -216,17 +315,24 @@ public class Debug {
             case "useAttackHero":
                 commandOutput.put("command", "useAttackHero");
                 break;
+            default:
+                break;
 
         }
     }
 
-    public static void getFrozenCardsOnTable(Card[][] table, ArrayNode output) {
+    /**
+     * Output all the frozen cards on the table.
+     * @param table Game table
+     * @param output output ArrayNode
+     */
+    public static void getFrozenCardsOnTable(final Card[][] table, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "getFrozenCardsOnTable");
 
         ArrayNode deckOutput = commandOutput.putArray("output");
-        for(int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < Game.NR_OF_ROWS; i++) {
+            for (int j = 0; j < Game.CARDS_ON_ROW; j++) {
                 if (table[i][j] != null && table[i][j].isFrozen()) {
                     ObjectNode cardOutput = deckOutput.objectNode();
 
@@ -238,8 +344,17 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void cardIsNotATank (Coordinates cardAttacker, Coordinates cardAttacked,
-                                       String commandName,  ArrayNode output) {
+    /**
+     * Outputs an error when a player attacks a card or a hero and
+     * there are tanks on the table that he should attack first.
+     * @param cardAttacker coordinates of the attacker card
+     * @param cardAttacked coordinates of the attacked card
+     * @param commandName command name
+     * @param output output ArrayNode
+     */
+    public static void cardIsNotATank(final Coordinates cardAttacker,
+                                       final Coordinates cardAttacked,
+                                       final String commandName,  final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         getRightCommandName(commandName, commandOutput);
 
@@ -256,8 +371,17 @@ public class Debug {
 
         output.add(commandOutput);
     }
-    public static void cardIsNotEnemy(Coordinates cardAttacker, Coordinates cardAttacked,
-                                      String commandName, ArrayNode output) {
+
+    /**
+     * Outputs an error when a player attacks an ally.
+     * @param cardAttacker coordinates of the attacker card
+     * @param cardAttacked coordinates of the attacked card
+     * @param commandName command name
+     * @param output output ArrayNode
+     */
+    public static void cardIsNotEnemy(final Coordinates cardAttacker,
+                                      final Coordinates cardAttacked,
+                                      final String commandName, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         getRightCommandName(commandName, commandOutput);
 
@@ -275,8 +399,16 @@ public class Debug {
 
         output.add(commandOutput);
     }
-    public static void cardIsFrozen(Coordinates cardAttacker, Coordinates cardAttacked,
-                                      String commandName, ArrayNode output) {
+
+    /**
+     * Outputs an error when a player attacks with a frozen card.
+     * @param cardAttacker coordinates of the attacker card
+     * @param cardAttacked coordinates of the attacked card
+     * @param commandName command name
+     * @param output output ArrayNode
+     */
+    public static void cardIsFrozen(final Coordinates cardAttacker, final Coordinates cardAttacked,
+                                     final String commandName, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         getRightCommandName(commandName, commandOutput);
 
@@ -293,8 +425,18 @@ public class Debug {
         commandOutput.put("error", "Attacker card is frozen.");
         output.add(commandOutput);
     }
-    public static void cardAlreadyAttacked(Coordinates cardAttacker, Coordinates cardAttacked,
-                                    String commandName, ArrayNode output) {
+
+    /**
+     * Outputs an error when a player attacks with a card that already
+     * made a move this turn.
+     * @param cardAttacker coordinates of the attacker card
+     * @param cardAttacked coordinates of the attacked card
+     * @param commandName command name
+     * @param output output ArrayNode
+     */
+    public static void cardAlreadyAttacked(final Coordinates cardAttacker,
+                                           final Coordinates cardAttacked,
+                                           final String commandName, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         getRightCommandName(commandName, commandOutput);
 
@@ -310,11 +452,16 @@ public class Debug {
         commandOutput.put("error", "Attacker card has already attacked this turn.");
         output.add(commandOutput);
     }
-
-
-
-    public static void cardIsEnemySpecial(Coordinates cardAttacker, Coordinates cardAttacked,
-                                             ArrayNode output) {
+    /**
+     * Outputs an error when a player uses an ability that should
+     * apply on allies on an enemy.
+     * @param cardAttacker coordinates of the attacker card
+     * @param cardAttacked coordinates of the attacked card
+     * @param output output ArrayNode
+     */
+    public static void cardIsEnemySpecial(final Coordinates cardAttacker,
+                                          final Coordinates cardAttacked,
+                                          final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
         commandOutput.put("command", "cardUsesAbility");
 
@@ -331,7 +478,12 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void gameEnd(int currentPlayer, ArrayNode output) {
+    /**
+     * Outputs a message when one of the players wins
+     * @param currentPlayer The player that has the turn
+     * @param output output ArrayNode
+     */
+    public static void gameEnd(final int currentPlayer, final ArrayNode output) {
 
         ObjectNode commandOutput = output.objectNode();
         if (currentPlayer == 1) {
@@ -343,25 +495,42 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void notEnoughManaHero(int affectedRow, ArrayNode output) {
+    /**
+     * Outputs a message when one of the players wins
+     * @param affectedRow the row affected by hero attack
+     * @param output output ArrayNode
+     */
+    public static void notEnoughManaHero(final int affectedRow, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "useHeroAbility");
         commandOutput.put("affectedRow", affectedRow);
-        commandOutput.put("error","Not enough mana to use hero's ability.");
+        commandOutput.put("error", "Not enough mana to use hero's ability.");
 
         output.add(commandOutput);
     }
-    public static void heroAlreadyAttacked(int affectedRow, ArrayNode output) {
+
+    /**
+     * Outputs an error when a player wants to attack but already made a move
+     * @param affectedRow the row affected by hero attack
+     * @param output output ArrayNode
+     */
+    public static void heroAlreadyAttacked(final int affectedRow, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "useHeroAbility");
         commandOutput.put("affectedRow", affectedRow);
-        commandOutput.put("error","Hero has already attacked this turn.");
+        commandOutput.put("error", "Hero has already attacked this turn.");
 
         output.add(commandOutput);
     }
-    public static void rowNotEnemyHero(int affectedRow, ArrayNode output) {
+
+    /**
+     * Outputs an error when a player wants to attack an ally
+     * @param affectedRow the row affected by hero attack
+     * @param output output ArrayNode
+     */
+    public static void rowNotEnemyHero(final int affectedRow, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "useHeroAbility");
@@ -370,7 +539,13 @@ public class Debug {
 
         output.add(commandOutput);
     }
-    public static void rowNotAllyHero(int affectedRow, ArrayNode output) {
+
+    /**
+     * Outputs an error when a player wants to attack an enemy
+     * @param affectedRow the row affected by hero attack
+     * @param output output ArrayNode
+     */
+    public static void rowNotAllyHero(final int affectedRow, final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "useHeroAbility");
@@ -379,7 +554,11 @@ public class Debug {
 
         output.add(commandOutput);
     }
-    public static void getPlayerOneWins(ArrayNode output) {
+    /**
+     * Outputs the total number of games that player one won
+     * @param output output ArrayNode
+     */
+    public static void getPlayerOneWins(final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "getPlayerOneWins");
@@ -388,7 +567,11 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void getPlayerTwoWins(ArrayNode output) {
+    /**
+     * Outputs the total number of games that player two won
+     * @param output output ArrayNode
+     */
+    public static void getPlayerTwoWins(final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "getPlayerTwoWins");
@@ -397,7 +580,11 @@ public class Debug {
         output.add(commandOutput);
     }
 
-    public static void getTotalGamesPlayed(ArrayNode output) {
+    /**
+     * Outputs the total number of games played
+     * @param output output ArrayNode
+     */
+    public static void getTotalGamesPlayed(final ArrayNode output) {
         ObjectNode commandOutput = output.objectNode();
 
         commandOutput.put("command", "getTotalGamesPlayed");
@@ -405,19 +592,5 @@ public class Debug {
 
         output.add(commandOutput);
     }
-    public static void printTable() {
-        Card[][] table = Game.getGameTable();
-        for(int i = 3; i >= 0; i--) {
-            System.out.printf("row " + i + " :");
-            for( int j = 0;  j < 5; j++) {
-                if(table[i][j] != null) {
 
-                    System.out.printf(table[i][j].getName() + "   ");
-                } else {
-                    System.out.printf("NULL   ");
-                }
-            }
-            System.out.printf("\n");
-        }
-    }
 }

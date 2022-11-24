@@ -1,24 +1,27 @@
 package cards;
 
 import fileio.CardInput;
-import lombok.Getter;
-import lombok.Setter;
+import game.structure.Game;
 
-import java.util.ArrayList;
 
 public class LordRoyce extends HeroCard {
 
-    public LordRoyce(CardInput cardInput) {
+    public LordRoyce(final CardInput cardInput) {
         super(cardInput);
     }
 
+    /**
+     * Sub-Zero: Makes the card with the max health on the attacked row frozen.
+     * @param table Game table
+     * @param affectedRow the row that will be attacked
+     */
     @Override
-    public void attack(Card[][] table, int affectedRow) {
-        System.out.printf("ENTERED LORD ROYCE" + "\n");
+    public void attack(final Card[][] table, final int affectedRow) {
         //Sub-zero
-        int cardsOnRow = 5;
+        int cardsOnRow = Game.CARDS_ON_ROW;
         int maxValue = -1, index = 0;
-        for(int i = cardsOnRow - 1; i >= 0; --i) {
+
+        for (int i = cardsOnRow - 1; i >= 0; --i) {
             if (table[affectedRow][i] != null) {
                 if (table[affectedRow][i].getAttackDamage() >= maxValue) {
                     maxValue = table[affectedRow][i].getAttackDamage();
@@ -33,8 +36,6 @@ public class LordRoyce extends HeroCard {
         this.setMadeMove(true);
     }
 
-
     @Override
-    public void specialAttack(Card cardAttacked) {
-    }
+    public void specialAttack(final Card cardAttacked) { }
 }

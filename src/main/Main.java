@@ -1,6 +1,6 @@
 package main;
 
-import GamePlay.EntryPoint;
+import game.play.EntryPoint;
 import checker.Checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,7 +72,7 @@ public final class Main {
 
         //TODO add here the entry point to your implementation
         //added entrypoint
-        EntryPoint.startGame(inputData,output);
+        EntryPoint.startGame(inputData, output);
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

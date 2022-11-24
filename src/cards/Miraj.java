@@ -4,29 +4,24 @@ import fileio.CardInput;
 
 public class Miraj extends SpecialMinionCard {
 
-
-
-    public Miraj(CardInput cardInput) {
+    public Miraj(final CardInput cardInput) {
         super(cardInput);
     }
-    public Miraj(Card cardToCopy) {
+    public Miraj(final Card cardToCopy) {
         super(cardToCopy);
     }
 
-
-
+    /**
+     * Skyjack: swaps the health between the card that used the attack
+     * and the card that was attacked.
+     * @param cardAttacked card that will be attacked.
+     */
     @Override
-    public void specialAttack(Card cardAttacked) {
-        System.out.printf("SPECIAL ATTACK :" + this.getName()  + " CardATTACKED "+cardAttacked.getName() +" Health:" +
-                cardAttacked.getHealth() + "  Attack " + cardAttacked.getAttackDamage());
-
+    public void specialAttack(final Card cardAttacked) {
         int aux = this.getHealth();
         this.setHealth(cardAttacked.getHealth());
         cardAttacked.setHealth(aux);
 
         this.setMadeMove(true);
-
-        System.out.printf("SPECIAL ATTACK :" + this.getName()  + " CardATTACKED "+cardAttacked.getName() +" Health:" +
-                cardAttacked.getHealth() + "  Attack " + cardAttacked.getAttackDamage());
     }
 }

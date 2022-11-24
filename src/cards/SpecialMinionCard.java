@@ -2,20 +2,13 @@ package cards;
 
 import fileio.CardInput;
 
-abstract class SpecialMinionCard extends MinionCard{
+abstract class SpecialMinionCard extends MinionCard {
 
-
-    public SpecialMinionCard(Card cardToCopy) {
+    SpecialMinionCard(final Card cardToCopy) {
         super(cardToCopy);
     }
 
-    public SpecialMinionCard(CardInput cardInput) {
+    SpecialMinionCard(final CardInput cardInput) {
         super(cardInput);
     }
-
-    
-
-
-
-
 }

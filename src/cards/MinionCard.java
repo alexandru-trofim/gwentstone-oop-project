@@ -5,10 +5,9 @@ import fileio.CardInput;
 public class MinionCard extends Card {
 
     public  MinionCard() {
-
     }
 
-    public MinionCard(CardInput cardInput) {
+    public MinionCard(final CardInput cardInput) {
         this.setMana(cardInput.getMana());
         this.setHealth(cardInput.getHealth());
         this.setAttackDamage(cardInput.getAttackDamage());
@@ -24,7 +23,7 @@ public class MinionCard extends Card {
         }
     }
 
-    public MinionCard(Card cardToCopy) {
+    public MinionCard(final Card cardToCopy) {
         this.setMana(cardToCopy.getMana());
         this.setHealth(cardToCopy.getHealth());
         this.setAttackDamage(cardToCopy.getAttackDamage());
@@ -36,15 +35,6 @@ public class MinionCard extends Card {
         this.setMadeMove(false);
     }
 
-
     @Override
-    public void specialAttack(Card cardAttacked) {
-
-    }
-
-
-
-
-
-
+    public void specialAttack(final Card cardAttacked) { }
 }

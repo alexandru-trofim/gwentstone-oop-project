@@ -1,6 +1,10 @@
-package gameStructure;
+package game.structure;
 
-import cards.*;
+import cards.Card;
+import cards.EmpressThorina;
+import cards.GeneralKocioraw;
+import cards.KingMudface;
+import cards.LordRoyce;
 import fileio.CardInput;
 import fileio.StartGameInput;
 import lombok.Getter;
@@ -14,8 +18,13 @@ public class GameStart {
     private @Getter @Setter Card playerTwoHero;
     private @Getter @Setter int startingPlayer;
 
-
-    public Card getRightHeroCard(CardInput card) {
+    /**
+     * Gets a CardInput object as a parameter and creates
+     * an object that extends Card depending on it's name
+     * @param card input information of a card
+     * @return returns a Card object
+     */
+    public Card getRightHeroCard(final CardInput card) {
 
         return switch (card.getName()) {
             case "King Mudface" -> new KingMudface(card);
@@ -26,13 +35,12 @@ public class GameStart {
         };
     }
 
-    public GameStart(StartGameInput startGame) {
+    public GameStart(final StartGameInput startGame) {
         this.playerOneDeckId = startGame.getPlayerOneDeckIdx();
         this.playerTwoDeckId = startGame.getPlayerTwoDeckIdx();
         this.shuffleSeed = startGame.getShuffleSeed();
         this.playerOneHero = getRightHeroCard(startGame.getPlayerOneHero());
         this.playerTwoHero = getRightHeroCard(startGame.getPlayerTwoHero());
         this.startingPlayer = startGame.getStartingPlayer();
-
         }
 }

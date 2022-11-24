@@ -4,29 +4,23 @@ import fileio.CardInput;
 
 public class TheCursedOne extends SpecialMinionCard {
 
-
-
-
-    public TheCursedOne(CardInput cardInput) {
+    public TheCursedOne(final CardInput cardInput) {
         super(cardInput);
     }
 
-    public TheCursedOne(Card cardToCopy) {
+    public TheCursedOne(final Card cardToCopy) {
         super(cardToCopy);
     }
 
-
+    /**
+     * Shapeshift: swaps the health with the damage of the attacked card.
+     * @param cardAttacked card that will be attacked.
+     */
     @Override
-    public void specialAttack(Card cardAttacked) {
-        System.out.printf("SPECIAL ATTACK :" + this.getName()  + " CardATTACKED "+cardAttacked.getName() +" Health:" +
-                cardAttacked.getHealth() + "  Attack " + cardAttacked.getAttackDamage());
-
+    public void specialAttack(final Card cardAttacked) {
         int aux = cardAttacked.getAttackDamage();
         cardAttacked.setAttackDamage(cardAttacked.getHealth());
         cardAttacked.setHealth(aux);
-
-        System.out.printf("SPECIAL ATTACK :" + this.getName()  + " CardATTACKED "+cardAttacked.getName() +" Health:" +
-                cardAttacked.getHealth() + "  Attack " + cardAttacked.getAttackDamage());
 
         this.setMadeMove(true);
     }

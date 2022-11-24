@@ -1,6 +1,14 @@
-package gameStructure;
+package game.structure;
 
-import cards.*;
+import cards.Card;
+import cards.Disciple;
+import cards.Firestorm;
+import cards.HeartHound;
+import cards.MinionCard;
+import cards.Miraj;
+import cards.TheCursedOne;
+import cards.TheRipper;
+import cards.Winterfell;
 import fileio.CardInput;
 import lombok.Setter;
 import lombok.Getter;
@@ -11,7 +19,7 @@ public class Deck {
     private @Getter @Setter int nrCardsInDeck;
     private @Getter @Setter ArrayList<Card> cards;
 
-    public Card getRightCard(CardInput card) {
+    public Card getRightCard(final CardInput card) {
         return switch (card.getName()) {
             case "The Ripper" -> new TheRipper(card);
             case "Miraj" -> new Miraj(card);
@@ -24,7 +32,7 @@ public class Deck {
         };
     }
 
-    public Card copyCard(Card card) {
+    public Card copyCard(final Card card) {
         return switch (card.getName()) {
             case "The Ripper" -> new TheRipper(card);
             case "Miraj" -> new Miraj(card);
@@ -38,26 +46,22 @@ public class Deck {
 
     }
 
-    public Deck(ArrayList<CardInput> cardsToAdd) {
-
+    public Deck(final ArrayList<CardInput> cardsToAdd) {
         this.nrCardsInDeck = cardsToAdd.size();
-
         this.cards = new ArrayList<Card>();
 
-        for(CardInput iter: cardsToAdd) {
+        for (CardInput iter: cardsToAdd) {
             Card cardToAdd = getRightCard(iter);
             this.cards.add(cardToAdd);
         }
-
     }
-    public Deck(Deck deckToCopy) {
+    public Deck(final Deck deckToCopy) {
         this.nrCardsInDeck = deckToCopy.getNrCardsInDeck();
         this.cards = new ArrayList<Card>();
 
-        for(Card cardToAdd: deckToCopy.getCards()) {
+        for (Card cardToAdd: deckToCopy.getCards()) {
             Card newCard = copyCard(cardToAdd);
             this.cards.add(newCard);
         }
     }
-
 }
